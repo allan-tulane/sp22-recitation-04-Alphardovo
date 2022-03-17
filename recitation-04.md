@@ -1,7 +1,7 @@
 # CMPS 2200  Recitation 04
 
-**Name (Team Member 1):**_________________________  
-**Name (Team Member 2):**_________________________
+**Name (Team Member 1):**____Haochen Chen_____________________  
+**Name (Team Member 2):**____Maria Chen_____________________
 
 
 In this lab you will practice using the `map` and `reduce` functions. These functions are commonly used together in a `map-reduce` framework, used by Google and others to parallelize and scale common computations.
@@ -36,7 +36,7 @@ To use this function to count words, you'll need to implement your own `map_f` a
 
 4. Assume that a word `w` appears `n` times. What is the **work** and **span** of `word_count_reduce` for this word, assuming a parallel implementation of the `reduce` function?
 
-**Enter answer here**
+I think the **work**is n and **span** is log(n). Because this the `word_count_reduce, so every element in the sequence will be go through. And the span of a computation denotes the number of steps that it takes to run, which represents the worst-case parallel evaluation time. It is log(n). 
 
 
 5. Why are we going through all this trouble? Couldn't I just use this function to count words?
@@ -50,10 +50,13 @@ for doc in docs:
 # counts = {'i': 2, 'am': 2, 'sam': 2, 'is': 1, 'ham': 1}
 ```
 
+Because this function is serial, there is no way to improve efficiency. It has to count one before it can count the next. But if map and reduce are used, then the two steps of map and reduce are separated, so multi-threading can be used, which can be parallelized.
+
 What is the problem that prevents us from easily parallelizing this solution?
 
 **Enter answer here**
 
+Using reduce and map can split different words, the count of each word will not affect the count of other words. Each word is separate and can be used separately as a thread, which is parallel. But in this function, the words are mixed. When we count the first we cannot count the second. This function is not a pure program. The program writes to a existing memory location. There are for loop in this function, and all word counts are processed in a list. Suppose we implement parallelism for this function, there will be races. The final result will be indeterminate.
 
 ## Part 2: Sentiment analysis
 

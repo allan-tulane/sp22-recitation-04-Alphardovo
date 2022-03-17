@@ -7,9 +7,9 @@ from collections import defaultdict
 
 def run_map_reduce(map_f, reduce_f, docs):
     # done. do not change me.
-    """    
+    """
     The main map reduce logic.
-    
+
     Params:
       map_f......the mapping function
       reduce_f...the reduce function
@@ -31,14 +31,20 @@ def word_count_map(doc):
       doc....a string to be split into tokens. split on whitespace.
     Returns:
       a list of tuples of form (token, 1), where token is a whitespace delimited element of this string.
-      
+
     E.g.
     >>> word_count_map('i am sam i am')
     [('i', 1), ('am', 1), ('sam', 1), ('i', 1), ('am', 1)]
     """
     ###TODO
-    
-    
+    docs = doc.split(' ')
+    ans = []
+    for item in docs:
+        ans.append((item, 1))
+    return ans
+
+
+
 
 def test_word_count_map():
     assert word_count_map('i am sam i am') == \
@@ -53,12 +59,13 @@ def word_count_reduce(group):
     E.g.
     >>> word_count_reduce(['i', [1,1]])
     ('i', 2)
-    
+
     NOTE: you should use call the `reduce` function here.
     """
     ###TODO
-    
-    
+    return (group[0],len(group[1]))
+
+
 def test_word_count_reduce():
     assert word_count_reduce(['i', [1,1,1]]) == ('i', 3)
 
@@ -78,7 +85,7 @@ def iterate(f, x, a):
         return x
     else:
         return iterate(f, f(x, a[0]), a[1:])
-    
+
 def flatten(sequences):
     # done. do not change me.
     return iterate(plus, [], sequences)
@@ -89,7 +96,7 @@ def collect(pairs):
     Implements the collect function (see text Vol II Ch2)
     E.g.:
     >>> collect([('i', 1), ('am', 1), ('sam', 1), ('i', 1)])
-    [('am', [1]), ('i', [1, 1]), ('sam', [1])]    
+    [('am', [1]), ('i', [1, 1]), ('sam', [1])]
     """
     result = defaultdict(list)
     for pair in sorted(pairs):
@@ -110,10 +117,10 @@ def reduce(f, id_, a):
     else:
         return f(reduce(f, id_, a[:len(a)//2]),
                  reduce(f, id_, a[len(a)//2:]))
-    
-    
-    
-    
+
+
+
+
 ### PART TWO ###
 
 def sentiment_map(doc,
@@ -125,18 +132,26 @@ def sentiment_map(doc,
       pos_terms...a set of positive terms
       neg_terms...a set of negative terms
     Returns:
-      a list of tuples of form (positive, 1) or (negative, 1)      
+      a list of tuples of form (positive, 1) or (negative, 1)
     E.g.
     >>> sentiment_map('it was a terrible waste of time')
     [('negative', 1), ('negative', 1)]
     """
     ###TODO
+    docs = doc.split(' ')
+    ans = []
+    for item in docs:
+        if item in neg_terms:
+            ans.append(('negative', 1))
+        elif item in pos_terms:
+            ans.append(('positive', 1))
+    return ans
 
 
 def test_sentiment_map():
     assert sentiment_map('it was a terrible waste of time') == [('negative', 1), ('negative', 1)]
 
-    
+
 def test_sentiment():
     docs = [
         'it was not great but not terrible',
@@ -146,3 +161,8 @@ def test_sentiment():
     result = run_map_reduce(sentiment_map, word_count_reduce, docs)
     assert result == [('negative', 3), ('positive', 3)]
 
+test_word_count_map()
+test_word_count_reduce()
+test_sentiment_map()
+test_sentiment()
+test_word_count()
